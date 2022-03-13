@@ -1,5 +1,5 @@
 
-<?php require_once "config/conexion.php"; ?>
+<?php require_once "controller/config/conexion.php"; ?>
 
 
 <!DOCTYPE html>
@@ -11,12 +11,10 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Dazzprise</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <!-- Bootstrap icons-->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" /> -->
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <script src="assets/js/funciones.js"></script>
+    
+ 
+ 
+   
     <link href="assets/css/styles.css" rel="stylesheet" />
     <link href="assets/css/estilos.css" rel="stylesheet" />
 </head>
@@ -24,31 +22,24 @@
 <body>
 
 <?php
-    
-    if (!empty($_POST)) {
-        if ($_POST['usuario'] == 'admin1@gmail.com' && $_POST['contraseña'] == 'admin') {
-            header("Location: http://localhost/card/admin/productos.php", TRUE, 301);
-            exit();
-       
-         }
-    }
-     
+  require ('controller/loginController.php'); 
+  loginController();
 ?>
 
     <a href="#" class="btn-flotante" id="btnCarrito">Carrito <span class="badge bg-success" id="carrito">0</span></a>
-    <!-- Navigation-->
+    <!-- la navegacion-->
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light">
         
 
-            <div class="container-fluid">
+        <div class="container-fluid">
                 <img src="assets/img/LogoDAZZPRISE1.png" width="20%" a class="navbar-brand" href="#"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                  
-                <!--  -->
+
                    
                 <a href="#" class="nav-link text-info" category="all">Todos</a>
                         <?php
@@ -63,8 +54,8 @@
                     <!-- <a href="#"  class="nav-link dropdown-item" category="all">Todo</a> -->
                     <li class="nav-item dropdown">
                         
-      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Categoria</a>
-         <ul class="dropdown-menu">
+             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Categoria</a>
+                <ul class="dropdown-menu">
       
                         <?php
                         $query = mysqli_query($conexion, "SELECT * FROM categorias");
@@ -72,14 +63,13 @@
                             <a href="#" class="nav-link" category="<?php echo $data['categoria']; ?>"><?php echo $data['categoria']; ?></a>
                         <?php } ?>
                     </ul>
-</div>                   
+    </div>                   
 
                 
                 </div>
             </div>
             
         <button class="btn btn-red" Onclick="Rlogin()"> Login </button>    
-            <!-- <p align="right"> <input type="button" value="Click Me" /> </p> -->
         </nav>
 
 
@@ -103,38 +93,37 @@
                 $query = mysqli_query($conexion, "SELECT p.*, c.id AS id_cat, c.categoria FROM productos p INNER JOIN categorias c ON c.id = p.id_categoria");
                 $result = mysqli_num_rows($query);
                 if ($result > 0) {
-                    while ($data = mysqli_fetch_assoc($query)) { ?>
-                        <div class="col mb-5 productos" category="<?php echo $data['categoria']; ?>">
-                            <div class="card h-100">
-                                <!-- Sale badge-->
-                                <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem"><?php echo ($data['precio_normal'] > $data['precio_rebajado']) ? 'Oferta' : ''; ?></div>
-                                <!-- Product image-->
-                                <img class="card-img-top" src="assets/img/<?php echo $data['imagen']; ?>" alt="..." />
+          while ($data = mysqli_fetch_assoc($query)) { ?>
+         <div class="col mb-5 productos" category="<?php echo $data['categoria']; ?>">
+                  <div class="card h-100">
+                        
+               <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem"><?php echo ($data['precio_normal'] > $data['precio_rebajado']) ? 'Oferta' : ''; ?></div>
+                               
+                <img class="card-img-top" src="assets/img/<?php echo $data['imagen']; ?>" alt="..." />
                                 <!-- Product details-->
                                 <div class="card-body p-4">
-                                    <div class="text-center">
+         <div class="text-center">
                                         <!-- Product name-->
-                                        <h5 class="fw-bolder"><?php echo $data['nombre'] ?></h5>
-                                        <p><?php echo $data['descripcion']; ?></p>
+          <h5 class="fw-bolder"><?php echo $data['nombre'] ?></h5>
+         <p><?php echo $data['descripcion']; ?></p>
                                         <!-- Product reviews-->
-                                        <div class="d-flex justify-content-center small text-warning mb-2">
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                        </div>
-                                        <!-- Product price-->
-                                        <span class="text-muted text-decoration-line-through"><?php echo $data['precio_normal'] ?></span>
-                                        <?php echo $data['precio_rebajado'] ?>
+                     <div class="d-flex justify-content-center small text-warning mb-2">
+                          <div class="bi-star-fill"></div>
+                         <div class="bi-star-fill"></div>
+                         <div class="bi-star-fill"></div>
+                         <div class="bi-star-fill"></div>
+                         <div class="bi-star-fill"></div>
+                     </div>
+                  <span class="text-muted text-decoration-line-through"><?php echo $data['precio_normal'] ?></span>
+<?php echo $data['precio_rebajado'] ?>
                                     </div>
                                 </div>
-                                <!-- Product actions-->
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto agregar" data-id="<?php echo $data['id']; ?>" href="#">Agregar</a></div>
-                                </div>
-                            </div>
-                        </div>
+                             
+           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                 <div class="text-center"><a class="btn btn-outline-dark mt-auto agregar" data-id="<?php echo $data['id']; ?>" href="#">Agregar</a></div>
+                     </div>
+               </div>
+          </div>
                 <?php  }
                 } ?>
 
@@ -152,7 +141,11 @@
     <!-- Core theme JS-->
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/scripts.js"></script>
+    <script src="assets/js/funciones.js"></script>
+
 </body>
+
+
 
 </html>
 
