@@ -16,11 +16,11 @@
     <h1>Crear Cuenta</h1>
     <span>or <a href="login.php">Login</a></span>
 
-    <form action="/card/index.php" method="POST">
-    <input name="nombre" type="nombre" placeholder="Nombre">
-    <input name="email" type="text" placeholder="Ingresa tu email">
-    <input name="telefono" type="text" placeholder="Ingresa tu telefono">
-    <input name="contraseña" type="password" placeholder="Ingresa tu contraseña">
+    <form action="../controller/registerController.php" method="POST">
+    <input name="nombre" type="nombre" placeholder="Nombre" required>
+    <input name="email" type="text" placeholder="Ingresa tu email" required>
+    <input name="telefono" type="text" placeholder="Ingresa tu telefono" required>
+    <input name="contraseña" type="password" placeholder="Ingresa tu contraseña" required>
 
       <input type="submit" value="Submit">
     </form>

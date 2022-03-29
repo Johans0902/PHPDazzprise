@@ -1,5 +1,5 @@
 <?php
-    require_once "config/conexion.php";
+    require "config/conexion.php";
    
         if (isset($_GET)) {
             if (!empty($_GET['accion']) && !empty($_GET['id'])) {
@@ -13,7 +13,7 @@
                 if ($_GET['accion'] == 'cli') {
                     $query = mysqli_query($conexion, "DELETE FROM categorias WHERE id = $id");
                     if ($query) {
-                        header('Location: categorias.php');
+                        header('Location: http://localhost/vista/admin/categorias.php');
                     }
                 }
             }
@@ -23,6 +23,7 @@
     function productos(){
         if (isset($_POST)) {
             if (!empty($_POST)) {
+                require "config/conexion.php";
                 $nombre = $_POST['nombre'];
                 $cantidad = $_POST['cantidad'];
                 $descripcion = $_POST['descripcion'];
@@ -36,7 +37,7 @@
                 $tmpname = $img['tmp_name'];
                 $fecha = date("YmdHis");
                 $foto = $fecha . ".jpg";
-                $destino = "../assets/img/" . $foto;
+                $destino = $_SERVER['DOCUMENT_ROOT']."/assets/img/" . $foto;
                 $query = mysqli_query($conexion, "INSERT INTO productos(nombre, descripcion, precio_normal, precio_rebajado, marca, modelo, cantidad, imagen, id_categoria) VALUES ('$nombre', '$descripcion', '$p_normal', '$p_rebajado', '$marca', '$modelo', $cantidad, '$foto', $categoria)");
                 if ($query) {
                     if (move_uploaded_file($tmpname, $destino)) {

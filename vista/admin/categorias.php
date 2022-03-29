@@ -1,5 +1,5 @@
 <?php
-require_once "../config/conexion.php";
+require_once "../../controller/adminController.php";
 if (isset($_POST)) {
     if (!empty($_POST)) {
         $nombre = $_POST['nombre'];
@@ -34,7 +34,7 @@ include("includes/header.php");
           <td><?php echo $data['id']; ?></td>
             <td><?php echo $data['categoria']; ?></td>
                  <td>
-   <form method="post" action="eliminar.php?accion=cli&id=<?php echo $data['id']; ?>" class="d-inline eliminar">
+   <form method="post" action="../../controller/adminController.php?accion=cli&id=<?php echo $data['id']; ?>" class="d-inline eliminar">
     <button class="btn btn-danger" type="submit">Eliminar</button>
              </form>
      </td>

@@ -30,7 +30,7 @@ include("includes/header.php");
                     $query = mysqli_query($conexion, "SELECT p.*, c.id AS id_cat, c.categoria FROM productos p INNER JOIN categorias c ON c.id = p.id_categoria ORDER BY p.id DESC");
                     while ($data = mysqli_fetch_assoc($query)) { ?>
                         <tr>
-                            <td><img class="img-thumbnail" src="../assets/img/<?php echo $data['imagen']; ?>" width="50"></td>
+                            <td><img class="img-thumbnail" src="../../../assets/img/<?php echo $data['imagen']; ?>" width="50"></td>
                             <td><?php echo $data['nombre']; ?></td>
                             <td><?php echo $data['descripcion']; ?></td>
                             <td><?php echo $data['precio_normal']; ?></td>

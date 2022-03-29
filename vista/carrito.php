@@ -1,3 +1,11 @@
+<?php
+ require_once "../controller/config/conexion.php";
+require_once "../controller/config/config.php";
+if(!isset($_SESSION)){
+    session_start();
+    }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,21 +15,20 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Carrito de Compras</title>
-    <!-- Favicon-->
-
-    <!-- Bootstrap icons-->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" /> -->
-    <!-- Core theme CSS (includes Bootstrap)-->
- 
+   
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+   
+    <link href="../assets/css/styles.css" rel="stylesheet" />
+    <link href="../assets/css/estilos.css" rel="stylesheet" />
 </head>
 
 <body>
-    <!-- Navigation-->
+    
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
 
-            <img src="assets/img/LogoDAZZPRISE2.png" width="20%" >
+            <img src="../assets/img/LogoDAZZPRISE2.png" width="20%" >
             <a class="navbar-brand" href="./"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -29,7 +36,6 @@
             </div>
         </nav>
     </div>
-    <!-- Header-->
     <header class="bg-dark py-5">
         <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
@@ -64,6 +70,13 @@
                     <div class="d-grid gap-2">
                         <div id="paypal-button-container"></div>
                         <button class="btn btn-warning" type="button" id="btnVaciar">Vaciar Carrito</button>
+                        <?php if(isset($_SESSION["usuario"])){ ?>
+                        <form action="../controller/carritoController.php" method="POST">
+                            <button class="btn btn-warning" Onclick='localStorage.removeItem("productos");$("#tblCarrito").html("");$("#total_pagar").text("0.00");'' type="submit">Pagar</button>
+                        </form>
+                        <?php }else{ ?>
+                            <h1 class="display-4"> Para poder pagar, registrate o inicia sesión primero </h1>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -80,3 +93,74 @@
             <p class="m-1 text-center text-white"> <img src="assets/img/LogoDAZZPRISE2.png" width="15%"></p>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../assets/js/jquery-3.6.0.min.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENT_ID; ?>&locale=<?php echo LOCALE; ?>"></script>
+    <script src="../assets/js/scripts.js"></script>
+    <script>
+        mostrarCarrito();
+
+        function mostrarCarrito() {
+            if (localStorage.getItem("productos") != null) {
+                let array = JSON.parse(localStorage.getItem('productos'));
+                if (array.length > 0) {
+                    $.ajax({
+                        url: '../controller/ajax.php',
+                        type: 'POST',
+                        async: true,
+                        data: {
+                            action: 'buscar',
+                            data: array
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            const res = JSON.parse(response);
+                            let html = '';
+                            res.datos.forEach(element => {
+                                html += `
+                            <tr>
+                                <td>${element.id}</td>
+                                <td>${element.nombre}</td>
+                                <td>${element.precio}</td>
+                                <td>1</td>
+                                <td>${element.precio}</td>
+                            </tr>
+                            `;
+                            });
+                            $('#tblCarrito').html(html);
+                            $('#total_pagar').text(res.total);
+                            paypal.Buttons({
+                                style: {
+                                    color: 'blue',
+                                    shape: 'pill',
+                                    label: 'pay'
+                                },
+                                createOrder: function(data, actions) {
+                                    return actions.order.create({
+                                        purchase_units: [{
+                                            amount: {
+                                                value: res.total
+                                            }
+                                        }]
+                                    });
+                                },
+                                onApprove: function(data, actions) {
+                                    return actions.order.capture().then(function(details) {
+                                        alert('Transaction completed by ' + details.payer.name.given_name);
+                                    });
+                                }
+                            }).render('#paypal-button-container');
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
